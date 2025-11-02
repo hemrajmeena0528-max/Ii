@@ -35,14 +35,16 @@
   h1 {
     font-family: 'Great Vibes', cursive;
     color: gold;
-    font-size: 2.5em;
+    font-size: 2.6em;
     margin-bottom: 0.6em;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
   }
 
   p {
     line-height: 1.7;
     font-size: 1.2em;
     color: #fceabb;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
   }
 
   @keyframes fadeIn {
@@ -53,23 +55,38 @@
   .floating {
     position: absolute;
     pointer-events: none;
-    opacity: 0.7;
+    opacity: 0.8;
     animation: floatUp ease-in infinite;
     will-change: transform, opacity;
+    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
   }
 
   @keyframes floatUp {
     0% {
-      transform: translate3d(0, 0, 0) scale(1);
+      transform: translateY(0) scale(1);
       opacity: 0;
     }
-    20% {
-      opacity: 1;
-    }
+    15% { opacity: 1; }
     100% {
-      transform: translate3d(0, -110vh, 0) scale(0.8);
+      transform: translateY(-110vh) scale(0.9);
       opacity: 0;
     }
+  }
+
+  .trail {
+    position: absolute;
+    pointer-events: none;
+    border-radius: 50%;
+    width: 6px;
+    height: 6px;
+    background: gold;
+    opacity: 0.5;
+    animation: fadeTrail 2s linear forwards;
+  }
+
+  @keyframes fadeTrail {
+    from { opacity: 0.6; transform: scale(1); }
+    to { opacity: 0; transform: scale(0.3); }
   }
 </style>
 </head>
@@ -89,27 +106,36 @@
   </audio>
 
   <script>
-    // Floating hearts and sparkles
     const colors = ['#FFD700', '#E6BE8A', '#FFF8DC', '#FFC107'];
-    for (let i = 0; i < 10; i++) {
+
+    // Floating hearts and sparkles
+    for (let i = 0; i < 18; i++) {
       const el = document.createElement('div');
       el.className = 'floating';
       el.innerHTML = Math.random() > 0.5 ? '❤' : '✨';
       el.style.left = Math.random() * 100 + 'vw';
-      el.style.animationDuration = 12 + Math.random() * 10 + 's';
-      el.style.fontSize = 12 + Math.random() * 12 + 'px';
+      el.style.animationDuration = 10 + Math.random() * 10 + 's';
+      el.style.fontSize = 14 + Math.random() * 14 + 'px';
       el.style.color = colors[Math.floor(Math.random() * colors.length)];
-      el.style.animationDelay = Math.random() * 8 + 's';
+      el.style.animationDelay = Math.random() * 10 + 's';
       document.body.appendChild(el);
     }
 
-    // Music autoplay fix for browsers
+    // Golden glow trail effect
+    document.addEventListener('mousemove', e => {
+      const trail = document.createElement('div');
+      trail.className = 'trail';
+      trail.style.left = e.pageX + 'px';
+      trail.style.top = e.pageY + 'px';
+      document.body.appendChild(trail);
+      setTimeout(() => trail.remove(), 2000);
+    });
+
+    // Music autoplay fix
     window.addEventListener("load", function() {
       const music = document.getElementById("bgMusic");
-      const tryPlay = setInterval(() => {
-        music.play().then(() => {
-          clearInterval(tryPlay);
-        }).catch(() => {});
+      const playTry = setInterval(() => {
+        music.play().then(() => clearInterval(playTry)).catch(() => {});
       }, 1000);
     });
   </script>
