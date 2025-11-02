@@ -62,35 +62,49 @@
   }
 
   @keyframes floatUp {
-    0% {
-      transform: translateY(0) scale(1);
-      opacity: 0;
-    }
+    0% { transform: translateY(0) scale(1); opacity: 0; }
     15% { opacity: 1; }
-    100% {
-      transform: translateY(-110vh) scale(0.9);
-      opacity: 0;
-    }
+    100% { transform: translateY(-110vh) scale(0.9); opacity: 0; }
   }
 
-  .trail {
-    position: absolute;
+  /* Overlay before starting */
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    color: gold;
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 1s ease;
+    z-index: 100;
+    cursor: pointer;
+  }
+
+  #overlay span {
+    font-size: 1.2em;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 10px;
+    color: #fff6b3;
+  }
+
+  .hidden {
+    opacity: 0;
     pointer-events: none;
-    border-radius: 50%;
-    width: 6px;
-    height: 6px;
-    background: gold;
-    opacity: 0.5;
-    animation: fadeTrail 2s linear forwards;
-  }
-
-  @keyframes fadeTrail {
-    from { opacity: 0.6; transform: scale(1); }
-    to { opacity: 0; transform: scale(0.3); }
   }
 </style>
 </head>
 <body>
+  <!-- Tap to start overlay -->
+  <div id="overlay">
+    💖 Tap to Begin 💖
+    <span>(and let the music play 🎵)</span>
+  </div>
+
+  <!-- Main content -->
   <div class="container">
     <h1>Happy Birthday bby ❤️</h1>
     <p>
@@ -100,8 +114,8 @@
     </p>
   </div>
 
-  <!-- Background Music -->
-  <audio id="bgMusic" autoplay loop>
+  <!-- Music -->
+  <audio id="bgMusic" loop>
     <source src="song.mp3" type="audio/mp3">
   </audio>
 
@@ -121,22 +135,14 @@
       document.body.appendChild(el);
     }
 
-    // Golden glow trail effect
-    document.addEventListener('mousemove', e => {
-      const trail = document.createElement('div');
-      trail.className = 'trail';
-      trail.style.left = e.pageX + 'px';
-      trail.style.top = e.pageY + 'px';
-      document.body.appendChild(trail);
-      setTimeout(() => trail.remove(), 2000);
-    });
+    // Overlay logic
+    const overlay = document.getElementById('overlay');
+    const music = document.getElementById('bgMusic');
 
-    // Music autoplay fix
-    window.addEventListener("load", function() {
-      const music = document.getElementById("bgMusic");
-      const playTry = setInterval(() => {
-        music.play().then(() => clearInterval(playTry)).catch(() => {});
-      }, 1000);
+    overlay.addEventListener('click', () => {
+      music.play();
+      overlay.classList.add('hidden');
+      setTimeout(() => overlay.remove(), 1000);
     });
   </script>
 </body>
