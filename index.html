@@ -1,86 +1,116 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Happy Birthday ❤️</title>
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      background: radial-gradient(circle at center, #000000 40%, #1a001f 100%);
-      color: #fff;
-      font-family: 'Poppins', sans-serif;
-      overflow: hidden;
-    }
-    .text {
-      text-align: center;
-      font-size: 1.8rem;
-      line-height: 1.6;
-      opacity: 0;
-      animation: fadeIn 3s ease-in-out forwards;
-    }
-    @keyframes fadeIn {
-      to { opacity: 1; }
-    }
-    .heart {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: pink;
-      transform: rotate(45deg);
-      animation: float 5s infinite ease-in-out;
-    }
-    .heart::before,
-    .heart::after {
-      content: "";
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: pink;
-      border-radius: 50%;
-    }
-    .heart::before { top: -10px; left: 0; }
-    .heart::after { left: -10px; top: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Happy Birthday bby ❤️</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
 
-    @keyframes float {
-      0% { transform: translateY(0) scale(1) rotate(45deg); opacity: 1; }
-      100% { transform: translateY(-200px) scale(1.5) rotate(45deg); opacity: 0; }
+  body {
+    margin: 0;
+    height: 100vh;
+    background: radial-gradient(circle at top left, #111, #000);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .container {
+    position: relative;
+    text-align: center;
+    padding: 2rem;
+    border: 2px solid rgba(255, 215, 0, 0.5);
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.3);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    max-width: 600px;
+    width: 90%;
+    animation: fadeIn 3s ease-in forwards;
+  }
+
+  h1 {
+    font-family: 'Great Vibes', cursive;
+    color: gold;
+    font-size: 2.5em;
+    margin-bottom: 0.6em;
+  }
+
+  p {
+    line-height: 1.7;
+    font-size: 1.2em;
+    color: #fceabb;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .floating {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.7;
+    animation: floatUp ease-in infinite;
+    will-change: transform, opacity;
+  }
+
+  @keyframes floatUp {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+      opacity: 0;
     }
-  </style>
+    20% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(0, -110vh, 0) scale(0.8);
+      opacity: 0;
+    }
+  }
+</style>
 </head>
 <body>
-  <div class="text">
-    <p>You are the most beautiful gift in my life😚.<br>
-    You’re my favorite person, my safe place, and my sweetest feeling 🥰.<br>
-    I hope today gives you as much happiness as you give me every single day 💝.</p>
+  <div class="container">
+    <h1>Happy Birthday bby ❤️</h1>
+    <p>
+      You are the most beautiful gift in my life 😚.<br>
+      You’re my favorite person, my safe place, and my sweetest feeling 🥰.<br>
+      I hope today gives you as much happiness as you give me every single day 💝.
+    </p>
   </div>
 
-  <!-- Music autoplay -->
-  <audio id="bgmusic" autoplay loop>
+  <!-- Background Music -->
+  <audio id="bgMusic" autoplay loop>
     <source src="song.mp3" type="audio/mp3">
   </audio>
 
   <script>
-    // create floating hearts
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = Math.random() * 3 + 3 + "s";
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
+    // Floating hearts and sparkles
+    const colors = ['#FFD700', '#E6BE8A', '#FFF8DC', '#FFC107'];
+    for (let i = 0; i < 10; i++) {
+      const el = document.createElement('div');
+      el.className = 'floating';
+      el.innerHTML = Math.random() > 0.5 ? '❤' : '✨';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = 12 + Math.random() * 10 + 's';
+      el.style.fontSize = 12 + Math.random() * 12 + 'px';
+      el.style.color = colors[Math.floor(Math.random() * colors.length)];
+      el.style.animationDelay = Math.random() * 8 + 's';
+      document.body.appendChild(el);
     }
-    setInterval(createHeart, 500);
 
-    // resume audio on user tap (some browsers block autoplay)
-    document.addEventListener('click', () => {
-      const music = document.getElementById('bgmusic');
-      music.play().catch(() => {});
+    // Music autoplay fix for browsers
+    window.addEventListener("load", function() {
+      const music = document.getElementById("bgMusic");
+      const tryPlay = setInterval(() => {
+        music.play().then(() => {
+          clearInterval(tryPlay);
+        }).catch(() => {});
+      }, 1000);
     });
   </script>
 </body>
